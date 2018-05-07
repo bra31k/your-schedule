@@ -1,12 +1,15 @@
 from django.shortcuts import render
-from .models import DaysOff, WeekendSetting, PersonalVotes
+from .models import DaysOff, PersonalVotes, Company
 from django.http import HttpResponseRedirect
 #from .forms import PersonalVotesForm
 
+def company(request):
+    comps = Company.objects.all()
+    return render(request, 'rasp/company.html', {'comps': comps})
 
 def shedule(request):
-    daysoffs = DaysOff.objects.all()
-    return render(request, 'rasp/shedule.html', {'daysoffs': daysoffs})
+        daysoffs = DaysOff.objects.all()
+        return render(request, 'rasp/shedule.html', {'daysoffs': daysoffs})
 
 def vote(request):
     if request.method == "POST":

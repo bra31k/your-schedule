@@ -1,9 +1,4 @@
 from django import forms
 
-from .models import PersonalVotes
+from .models import Company
 
-class PersonalVotesForm(forms.ModelForm):
-
-    class Meta:
-        model = PersonalVotes
-        fields = ['userName','selected_day']
