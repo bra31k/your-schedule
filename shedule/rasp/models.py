@@ -19,4 +19,6 @@ class WeekendSetting(models.Model):
 class PersonalVotes(models.Model):
     userName = models.CharField(max_length=30)
     selected_day = models.CharField(max_length=7)
+    def __str__(self):
+        return self.selected_day
 # Create your models here.

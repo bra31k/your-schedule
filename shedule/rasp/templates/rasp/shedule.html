@@ -1,4 +1,3 @@
-<!-- templates/home.html-->
 {% extends "admin/base.html" %}
 
 {% block title %}Home{% endblock %}
@@ -11,12 +10,7 @@
   <p>You are not logged in</p>
 <a href="{% url 'login' %}">login</a>
 {% endif %}
-<form action="vote/" method="post">
-    {% csrf_token %}
-{% for daysoff in daysoffs %}
-    <input type="checkbox" name="daysoff[]" id="daysoff{{ forloop.counter }}" value="{{ daysoff.id }}" />
-    <label for="daysoff{{ forloop.counter }}">{{ daysoff }}</label><br />
+{% for selected_day in selected_days %}
+  {{ selected_day }}
 {% endfor %}
-<input type="submit" value="vote" />
-    </form>
 {% endblock %}
