@@ -18,3 +18,11 @@ class Migration(migrations.Migration):
             ],
         ),
     ]
+
+
+[4,6,7,8,9,53,52]
+j = 4
+j = 6
+
+i = 0
+i = 1

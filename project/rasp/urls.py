@@ -7,5 +7,5 @@ urlpatterns = [
     path('daysoff/', views.daysoff, name='daysoff'),
     path('shedule/vote/', views.vote, name='vote'),
     path('', views.company, name='company'),
-    path('shedule/', views.shedule, name='shedule')
+    path('schedule/', views.schedule, name='schedule')
 ]
