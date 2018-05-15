@@ -10,21 +10,9 @@
   <p>You are not logged in</p>
 <a href="{% url 'login' %}">login</a>
 {% endif %}
-{% for num, day in rasp.items %}
-  <div>
-    <ul>
-    {% for name_num, name in day.items %}
-      <li>{{ name_num }}: {{ name }}</li>
-    {% endfor %}
-    </ul>
-  </div>
-{% endfor %}
-<div>
-  {{ min_emp }}
-</div>
-<div>
-  {{ max_emp }}
-</div>
+{% if too_much_people or not_enough_people %}
+<p>"Слишком много или мало сотрудников"</p>
+{% else %}
 {% for num, name in res.items %}
   <div>
     <ul>
@@ -35,4 +23,5 @@
     </ul>
   </div>
 {% endfor %}
+{% endif %}
 {% endblock %}
