@@ -13,20 +13,21 @@ class Skill(models.Model):
     def __str__(self):
         return self.nameSkill
 
-class SkillPerDay(models.Model):
+class Skills_limits(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    employee_in_day = models.IntegerField()
+    sum_employee = models.IntegerField()
     name_skill = models.CharField(max_length=30, default=str(skill))
 
     def __str__(self):
         return self.name_skill
 
-class DaysOff(models.Model):
+class Duty_setting(models.Model):
+    day_num = models.IntegerField(default=1)
     dayOfWeek = models.CharField(max_length=30)
-    skills_per_day = models.ManyToManyField(SkillPerDay)
+    skills_per_day = models.ManyToManyField(Skills_limits)
 
-    def __str__(self):
-        return self.dayOfWeek
+    def __int__(self):
+        return self.day_num
 
 class WeekendSetting(models.Model):
     weekendsPerWeek = models.IntegerField()
@@ -34,13 +35,14 @@ class WeekendSetting(models.Model):
     def __int__(self):
         return self.weekendsPerWeek
 
-class PersonalVotes(models.Model):
+class Users(models.Model):
+    id_user = models.IntegerField(default=1)
     userName = models.CharField(max_length=30)
-    selected_day = models.CharField(max_length=7)
+    daysoff = models.CharField(max_length=7)
     skills = models.ForeignKey(Skill, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        return self.selected_day
+        return self.daysoff
 
 
 

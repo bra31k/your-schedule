@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import DaysOff, WeekendSetting, PersonalVotes, Company, Skill, SkillPerDay
+from .models import Duty_setting, WeekendSetting, Users, Company, Skill, Skills_limits
 
-admin.site.register(DaysOff)
+admin.site.register(Duty_setting)
 admin.site.register(WeekendSetting)
-admin.site.register(PersonalVotes)
+admin.site.register(Users)
 admin.site.register(Company)
 admin.site.register(Skill)
-admin.site.register(SkillPerDay)
+admin.site.register(Skills_limits)

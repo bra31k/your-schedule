@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import DaysOff, PersonalVotes, Company, WeekendSetting, SkillPerDay
+from .models import Duty_setting, Users, Company, WeekendSetting, Skills_limits, Skill
 # from django.http import HttpResponseRedirect
 # from .forms import PersonalVotesForm
 
@@ -10,7 +10,7 @@ def company(request):
 
 
 def daysoff(request):
-    daysoffs = DaysOff.objects.all()
+    daysoffs = Duty_setting.objects.all()
     return render(request, 'rasp/daysoff.html', {'daysoffs': daysoffs})
 
 
@@ -18,80 +18,79 @@ def vote(request):
     if request.method == "POST":
         listObject = request.POST.getlist('daysoff[]')
         if len(listObject) == 3:
-            personal = PersonalVotes(selected_day=listObject[0] + listObject[1], userName=request.user)
+            personal = Users(selected_day=listObject[0] + listObject[1], userName=request.user)
             personal.save()
-            selected_daysoff = DaysOff.objects.get(pk=listObject[1])
+            selected_daysoff = Duty_setting.objects.get(pk=listObject[1])
             return render(request, 'rasp/vote.html', {'daysoffs': selected_daysoff})
 
 
+
 def schedule(request):
-    maxEmp = {}
-    minEmp = {}
-    selected_days = []
-    name_list = []
-    rasp = {}
-    per_day_rasp = {}
-    per_day_limits = DaysOff.objects.all()
-    emp = 0
-    sum_emp_in_day = []
-    not_enough_people = False
-    too_much_people = False
-    weekends = range(int(WeekendSetting.objects.first().weekendsPerWeek))
+    on_duty = {}
+    users_daysoff = {}
+    skill_limit = {}
+    days_all = Duty_setting.objects.all()
+    for day in days_all:
+        on_duty[day.id] = {}
+        skill_limit[day.id] = {}
+        skill_in_day = (day.skills_per_day.values_list(flat=True))
+        for skill in Skill.objects.all():
+            skill_limit[day.id][skill.id] = day.skills_per_day.values_list('sum_employee', flat=True).get(pk=skill_in_day[skill.id-1])
+            on_duty[day.id][skill.id] = []
+        for user in Users.objects.all():
+            users_daysoff[user.id_user] = user.daysoff
+            if str(day.day_num) not in users_daysoff[user.id_user]:
+                if user.id_user not in on_duty[day.id][user.skills.id]:
+                    on_duty[day.id][user.skills.id].append(user.id_user)
+    print(skill_limit)
 
-    for num, item in enumerate(PersonalVotes.objects.all()):
-        name_list.append(item.userName)
-        selected_days.append([])
-        for weekend_day in weekends:
-            selected_days[num].append(int(item.selected_day[weekend_day]))
-    name_count_range = range(len(name_list))
 
-    for day in per_day_limits:
-        sum_emp_in_day.append(sum(day.skills_per_day.values_list('employee_in_day', flat=True)))
+    def get_overlay(day_id, skill_id, skill_limit):
+        on_duty_with_skill = len(on_duty[day_id][skill_id])
+        if on_duty_with_skill > skill_limit[day_id][skill_id]:
+            return on_duty[day_id][skill_id]
+        return False
 
-    for day_num, day in enumerate(per_day_limits):
-        rasp[day_num + 1] = {}
-        maxEmp[day_num + 1] = False
-        minEmp[day_num + 1] = False
-        for name in name_count_range:
-            is_workday = True
-            for weekend_day in weekends:
-                if selected_days[name][weekend_day] == day_num + 1:
-                    is_workday = False
+    def fill_one_user(cur_day, skill_id, skill_limit):
+        finded_user = None
+        for next_day in days_all[cur_day:]:
+            overlay_users = get_overlay(next_day.id, skill_id, skill_limit)
+#            print(overlay_users)
+            if not overlay_users:
+                # not found enough people for this skill at this day
+                continue
+            available_users = list(set(overlay_users) - set(on_duty[cur_day][skill_id]))
+            if not len(available_users):
+                continue
+            for user in range(len(available_users)):
+                if available_users[user] not in on_duty[cur_day][skill_id]:
+                    finded_user = available_users[user]
+            break
 
-            if is_workday:
-                emp = emp + 1
-            rasp[day_num + 1][name] = is_workday
-        if emp > sum_emp_in_day[day_num]:
-            maxEmp[day_num + 1] = True
-        elif emp < sum_emp_in_day[day_num]:
-            minEmp[day_num + 1] = True
-        emp = 0
+        if finded_user:
+            on_duty[cur_day][skill_id].append(finded_user)
+            on_duty[next_day.id][skill_id].remove(finded_user)
 
-    for day_num, day in enumerate(per_day_limits):
-        actual_day = day_num + 1
-        per_day_rasp[actual_day] = []
-        for name in name_count_range:
-            if rasp[actual_day][name]:
-                per_day_rasp[actual_day].append(name)
-        if minEmp[actual_day]:
-            if sum(maxEmp.values()):
-                for name in name_count_range:
-                    if name in per_day_rasp[actual_day]:
-                        continue
-                    for max_day in maxEmp:
-                        if sum(rasp[actual_day].values()) == sum_emp_in_day[actual_day - 1]:
-                            minEmp[actual_day] = False
-                            break
-                        if rasp[max_day][name] and maxEmp[max_day] and name not in per_day_rasp[actual_day]:
-                            per_day_rasp[actual_day].append(name)
-                            if max_day in per_day_rasp:
-                                per_day_rasp[max_day].remove(name)
-                            rasp[max_day][name] = False
-                            rasp[actual_day][name] = True
-                            if sum(rasp[max_day].values()) <= sum_emp_in_day[max_day - 1]:
-                                maxEmp[max_day] = False
-    if sum(minEmp.values()):
-        not_enough_people = True
-    if sum(maxEmp.values()):
-        too_much_people = True
-    return render(request, 'rasp/schedule.html', {'too_much_people': too_much_people, 'not_enough_people': not_enough_people, 'res': per_day_rasp})
+    for day in days_all:
+        skill_in_day = (day.skills_per_day.values_list(flat=True))
+        skill_id = day.skills_per_day.values_list('skill', flat=True)
+        for id in range(len(skill_in_day)):
+#            skill_limit = day.skills_per_day.values_list('sum_employee', flat=True).get(pk=skill_in_day[id])
+#            print(skill_limit)
+            on_duty_with_skill = len(on_duty[day.id][skill_id[id]])
+#            print(on_duty_with_skill, skill_limit, day.id, skill_id[id])
+            if on_duty_with_skill < skill_limit[day.id][skill_id[id]]:
+                    for count in range(skill_limit[day.id][skill_id[id]] - on_duty_with_skill):
+                        fill_one_user(day.id, skill_id[id], skill_limit)
+                        print(day.id , skill_id[id], skill_limit[day.id][skill_id[id]])
+
+
+    print(on_duty)
+
+    return render(request, 'rasp/schedule.html', {'res': on_duty})
+
+
+
+
+
+
