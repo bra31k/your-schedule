@@ -39,7 +39,7 @@ class Users(models.Model):
     id_user = models.IntegerField(default=1)
     userName = models.CharField(max_length=30)
     daysoff = models.CharField(max_length=7)
-    skills = models.ForeignKey(Skill, on_delete=models.CASCADE, default=1)
+    skills = models.ManyToManyField(Skill)
 
     def __str__(self):
         return self.daysoff
