@@ -88,6 +88,7 @@ def schedule(request):
             available_users = list(set(overlay_users) - set(on_duty[cur_day][skill_id]))
             if not len(available_users):
                 continue
+            min_rate = 100
             for user in available_users:
                 keys = on_duty[cur_day].keys()
                 enum = 0
@@ -95,8 +96,9 @@ def schedule(request):
                     if user not in on_duty[cur_day][key]:
                         enum += 1
                         if enum == len(keys):
-                           finded_user = user
-                           break
+                            if min_rate > users_all.values_list('rate', flat=True).get(id_user=user):
+                                min_rate = users_all.values_list('rate', flat=True).get(id_user=user)
+                                finded_user = user
             break
 
         if finded_user:

@@ -35,11 +35,13 @@ class WeekendSetting(models.Model):
     def __int__(self):
         return self.weekendsPerWeek
 
+
 class Users(models.Model):
     id_user = models.IntegerField(default=1)
     userName = models.CharField(max_length=30)
     daysoff = models.CharField(max_length=7)
     skills = models.ManyToManyField(Skill)
+    rate = models.IntegerField(default=0)
 
     def __str__(self):
         return self.daysoff
