@@ -31,12 +31,12 @@ def schedule(request):
     skill_limit = {}
     days_all = Duty_setting.objects.all()
     users_all = Users.objects.all()
-#    print(Users.objects.all().values_list('skill', flat=True))
+    skill_all = Skill.objects.all()
     for day in days_all:
         on_duty[day.id] = {}
         skill_limit[day.id] = {}
         skill_in_day = (day.skills_per_day.values_list(flat=True))
-        for skill in Skill.objects.all():
+        for skill in skill_all:
             skill_limit[day.id][skill.id] = day.skills_per_day.values_list('sum_employee', flat=True).get(pk=skill_in_day[skill.id-1])
             on_duty[day.id][skill.id] = []
         for user in users_all:
@@ -47,7 +47,6 @@ def schedule(request):
                     if user.id_user not in on_duty[day.id][skills[id]]:
                         on_duty[day.id][skills[id]].append(user.id_user)
 
-    print(on_duty)
     def del_dublicate(day, skill_id):
         keys = on_duty[day].keys()
         del_key = 0
@@ -58,6 +57,7 @@ def schedule(request):
                     if skill_id == key and del_key > 1:
                         on_duty[day][key].remove(user.id)
             del_key = 0
+
 
     def change_skill(day_id, skill_id):
         keys = on_duty[day.id].keys()
@@ -81,27 +81,38 @@ def schedule(request):
 
     def fill_one_user(cur_day, skill_id, skill_limit):
         finded_user = None
-        for next_day in days_all[cur_day:]:
+        for next_day in days_all:
             overlay_users = get_overlay(next_day.id, skill_id, skill_limit)
             if not overlay_users:
-                # not found enough people for this skill at this day
                 continue
             available_users = list(set(overlay_users) - set(on_duty[cur_day][skill_id]))
             if not len(available_users):
                 continue
-            for user in range(len(available_users)):
-                if available_users[user] not in on_duty[cur_day]:
-                    finded_user = available_users[user]
+            for user in available_users:
+                keys = on_duty[cur_day].keys()
+                enum = 0
+                for key in keys:
+                    if user not in on_duty[cur_day][key]:
+                        enum += 1
+                        if enum == len(keys):
+                           finded_user = user
+                           break
             break
-
 
         if finded_user:
             on_duty[cur_day][skill_id].append(finded_user)
-            on_duty[next_day.id][skill_id].remove(finded_user)
+            skillz = users_all.values_list('skills', flat=True).filter(id_user=finded_user)
+            if len(skillz) > 1:
+                for skill in range(len(skillz)):
+                    if finded_user in on_duty[next_day.id][skillz[skill]]:
+                        on_duty[next_day.id][skillz[skill]].remove(finded_user)
+            else:
+                on_duty[next_day.id][skill_id].remove(finded_user)
         else:
-            for next_day in days_all[cur_day:]:
+            for next_day in days_all:
                 if change_skill(next_day.id, skill_id):
                     fill_one_user(cur_day, skill_id, skill_limit)
+
 
     for day in days_all:
         skill_in_day = (day.skills_per_day.values_list(flat=True))
@@ -111,9 +122,7 @@ def schedule(request):
             on_duty_with_skill = len(on_duty[day.id][skill_id[id]])
             if on_duty_with_skill < skill_limit[day.id][skill_id[id]]:
                 for count in range(skill_limit[day.id][skill_id[id]] - on_duty_with_skill):
-                    print(day.id, skill_id[id])
                     fill_one_user(day.id, skill_id[id], skill_limit)
-
 
     print(on_duty)
 
