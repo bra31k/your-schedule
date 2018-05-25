@@ -1,4 +1,5 @@
 {% extends "admin/base.html" %}
+{% load utils %}
 
 {% block title %}Home{% endblock %}
 
@@ -6,6 +7,10 @@
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
   <p><a href="{% url 'logout' %}">logout</a></p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Сохранить?" />
   {% for day_name, day in res.items %}
   <div>
     <ul>
@@ -15,6 +20,7 @@
         <p><em>{{ skill }}</em></p>
         <div>
           {% for user in users %}
+          <input type="hidden" name="daydata-{{day_name}}" value='{{skill}}:{{user.id_user}}'/>
           <span>{{ user }}</span>
           {% endfor %}
         </div>
@@ -23,7 +29,7 @@
     </ul>
   </div>
   {% endfor %}
-  <input type="submit" value="Сохранить?" />
+  </form>
 {% else %}
   <p>You are not logged in</p>
 <a href="{% url 'login' %}">login</a>
