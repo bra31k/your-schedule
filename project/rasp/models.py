@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Company(models.Model):
@@ -59,11 +61,22 @@ class DayResults(models.Model):
     income = models.IntegerField()
     day_num = models.IntegerField()
 
+    def __str__(self):
+        return str(self.date)
+
+#@receiver('post_save', sender=DayResults)
+#def update_rating(sender, instance, **kwargs):
+#    instance.income
+#    for res in instance.userdayresult_set
+#        res.user
 
 class UserDayResults(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     day = models.ForeignKey(DayResults, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
 
 
 
