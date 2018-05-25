@@ -23,11 +23,12 @@ class Skills_limits(models.Model):
 
 class Duty_setting(models.Model):
     day_num = models.IntegerField(default=1)
-    dayOfWeek = models.CharField(max_length=30)
+    day_name = models.CharField(max_length=30)
     skills_per_day = models.ManyToManyField(Skills_limits)
 
-    def __int__(self):
-        return self.day_num
+    def __str__(self):
+        return self.day_name
+
 
 class WeekendSetting(models.Model):
     weekendsPerWeek = models.IntegerField()
@@ -40,11 +41,30 @@ class Users(models.Model):
     id_user = models.IntegerField(default=1)
     userName = models.CharField(max_length=30)
     daysoff = models.CharField(max_length=7)
-    skills = models.ManyToManyField(Skill)
-    rate = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.daysoff
+        return self.userName
+
+class Rating(models.Model):
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    value = models.IntegerField(default=1)
+
+    def __str__(self):
+        return str(self.user)
+
+
+class DayResults(models.Model):
+    date = models.DateField()
+    income = models.IntegerField()
+    day_num = models.IntegerField()
+
+
+class UserDayResults(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    day = models.ForeignKey(DayResults, on_delete=models.CASCADE)
+
 
 
 

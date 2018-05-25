@@ -6,22 +6,26 @@
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
   <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-<a href="{% url 'login' %}">login</a>
-{% endif %}
-{% if too_much_people or not_enough_people %}
-<p>"Слишком много или мало сотрудников"</p>
-{% else %}
-{% for num, name in res.items %}
+  {% for day_name, day in res.items %}
   <div>
     <ul>
-    <p>res day {{ num }}</p>
-    {% for day in name %}
-      <li>{{ day }}</li>
+    <p><b>{{ day_name }}</b></p>
+    {% for skill, users in day.items %}
+      <li>
+        <p><em>{{ skill }}</em></p>
+        <div>
+          {% for user in users %}
+          <span>{{ user }}</span>
+          {% endfor %}
+        </div>
+      </li>
     {% endfor %}
     </ul>
   </div>
-{% endfor %}
+  {% endfor %}
+  <input type="submit" value="Сохранить?" />
+{% else %}
+  <p>You are not logged in</p>
+<a href="{% url 'login' %}">login</a>
 {% endif %}
 {% endblock %}

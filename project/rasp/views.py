@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Duty_setting, Users, Company, WeekendSetting, Skills_limits, Skill
+from .models import Duty_setting, Users, Company, WeekendSetting, Skills_limits, Skill, Rating
 # from django.http import HttpResponseRedirect
 # from .forms import PersonalVotesForm
 
@@ -32,60 +32,64 @@ def schedule(request):
     days_all = Duty_setting.objects.all()
     users_all = Users.objects.all()
     skill_all = Skill.objects.all()
+    rating = Rating.objects.all()
     for day in days_all:
-        on_duty[day.id] = {}
-        skill_limit[day.id] = {}
+        on_duty[day] = {}
+        skill_limit[day] = {}
         skill_in_day = (day.skills_per_day.values_list(flat=True))
         for skill in skill_all:
-            skill_limit[day.id][skill.id] = day.skills_per_day.values_list('sum_employee', flat=True).get(pk=skill_in_day[skill.id-1])
-            on_duty[day.id][skill.id] = []
+            skill_limit[day][skill.nameSkill] = day.skills_per_day.values_list('sum_employee', flat=True).get(pk=skill_in_day[skill.id-1])
+            on_duty[day][skill.nameSkill] = []
         for user in users_all:
-            users_daysoff[user.id_user] = user.daysoff
-            skills = user.skills.values_list('id', flat = True)
-            for id in range(len(skills)):
-                if str(day.day_num) not in users_daysoff[user.id_user]:
-                    if user.id_user not in on_duty[day.id][skills[id]]:
-                        on_duty[day.id][skills[id]].append(user.id_user)
+            users_daysoff[user] = user.daysoff
+            for skill_name in rating.filter(user=user).values_list('skill__nameSkill', flat=True):
+                if str(day.id) not in users_daysoff[user]:
+                    if user not in on_duty[day][skill_name]:
+                        on_duty[day][skill_name].append(user)
 
-    def del_dublicate(day, skill_id):
+
+
+    def del_dublicate(day, skill_name):
         keys = on_duty[day].keys()
         del_key = 0
         for user in users_all:
             for key in keys:
-                if user.id in on_duty[day][key]:
+                if user in on_duty[day][key]:
                     del_key = del_key + 1
-                    if skill_id == key and del_key > 1:
-                        on_duty[day][key].remove(user.id)
+                    if skill_name == key and del_key > 1:
+                        on_duty[day][key].remove(user)
             del_key = 0
 
 
-    def change_skill(day_id, skill_id):
-        keys = on_duty[day.id].keys()
+    def change_skill(day, skill_name):
+        keys = on_duty[day].keys()
         for key in keys:
-            key != skill_id
-            if len(on_duty[day_id][key]) > skill_limit[day_id][key]:
-                for id_user in on_duty[day_id][key]:
-                    skillz = users_all.values_list('skills', flat=True).filter(id_user=id_user)
+            key != skill_name
+            if len(on_duty[day][key]) > skill_limit[day][key]:
+                for user in on_duty[day][key]:
+                    skillz = rating.values_list('skill', flat=True).filter(user=user)
                     if len(skillz) > 1:
-                        on_duty[day_id][key].remove(id_user)
-                        on_duty[day_id][skill_id].append(id_user)
+                        on_duty[day][key].remove(user)
+                        on_duty[day][skill_name].append(user)
                         return True
         return False
 
 
-    def get_overlay(day_id, skill_id, skill_limit):
-        on_duty_with_skill = len(on_duty[day_id][skill_id])
-        if on_duty_with_skill > skill_limit[day_id][skill_id]:
-            return on_duty[day_id][skill_id]
+    def get_overlay(day, skill_name, skill_limit):
+        on_duty_with_skill = len(on_duty[day][skill_name])
+        if on_duty_with_skill > skill_limit[day][skill_name]:
+            return on_duty[day][skill_name]
         return False
 
-    def fill_one_user(cur_day, skill_id, skill_limit):
+    def fill_one_user(cur_day, skill_name, skill_limit):
         finded_user = None
+        user_ratings = rating.filter(skill__nameSkill=skill_name).order_by('value').values('user__id_user', 'value')
+        user_settings_dict = {key['user__id_user']: key['value'] for key in user_ratings}
         for next_day in days_all:
-            overlay_users = get_overlay(next_day.id, skill_id, skill_limit)
+            overlay_users = get_overlay(next_day, skill_name, skill_limit)
             if not overlay_users:
                 continue
-            available_users = list(set(overlay_users) - set(on_duty[cur_day][skill_id]))
+            available_users = list(set(overlay_users) - set(on_duty[cur_day][skill_name]))
             if not len(available_users):
                 continue
             min_rate = 100
@@ -96,35 +100,36 @@ def schedule(request):
                     if user not in on_duty[cur_day][key]:
                         enum += 1
                         if enum == len(keys):
-                            if min_rate > users_all.values_list('rate', flat=True).get(id_user=user):
-                                min_rate = users_all.values_list('rate', flat=True).get(id_user=user)
+                            if min_rate > user_settings_dict[users_all.filter(userName=user).values_list('id_user', flat=True)[0]]:
+                                min_rate = user_settings_dict[users_all.filter(userName=user).values_list('id_user', flat=True)[0]]
                                 finded_user = user
             break
 
         if finded_user:
-            on_duty[cur_day][skill_id].append(finded_user)
-            skillz = users_all.values_list('skills', flat=True).filter(id_user=finded_user)
-            if len(skillz) > 1:
-                for skill in range(len(skillz)):
-                    if finded_user in on_duty[next_day.id][skillz[skill]]:
-                        on_duty[next_day.id][skillz[skill]].remove(finded_user)
+            on_duty[cur_day][skill_name].append(finded_user)
+            skill_names = rating.filter(user__userName=finded_user).values_list('skill__nameSkill', flat=True)
+            if len(skill_names) > 1:
+                for user_skill_name in skill_names:
+                    if finded_user in on_duty[next_day][user_skill_name]:
+                        on_duty[next_day][user_skill_name].remove(finded_user)
             else:
-                on_duty[next_day.id][skill_id].remove(finded_user)
+                on_duty[next_day][skill_name].remove(finded_user)
         else:
             for next_day in days_all:
-                if change_skill(next_day.id, skill_id):
-                    fill_one_user(cur_day, skill_id, skill_limit)
+                if change_skill(next_day, skill_name):
+                    fill_one_user(cur_day, skill_name, skill_limit)
 
 
     for day in days_all:
-        skill_in_day = (day.skills_per_day.values_list(flat=True))
-        skill_id = day.skills_per_day.values_list('skill', flat=True)
-        for id in range(len(skill_in_day)):
-            del_dublicate(day.id, skill_id[id])
-            on_duty_with_skill = len(on_duty[day.id][skill_id[id]])
-            if on_duty_with_skill < skill_limit[day.id][skill_id[id]]:
-                for count in range(skill_limit[day.id][skill_id[id]] - on_duty_with_skill):
-                    fill_one_user(day.id, skill_id[id], skill_limit)
+        for skill_per_day in day.skills_per_day.all():
+            #print(skill_per_day)
+            skill_name = skill_per_day.skill.nameSkill
+            del_dublicate(day, skill_name)
+            on_duty_with_skill = len(on_duty[day][skill_name])
+            if on_duty_with_skill < skill_limit[day][skill_name]:
+                for count in range(skill_limit[day][skill_name] - on_duty_with_skill):
+                    #print(day.id, skill_name, 'find')
+                    fill_one_user(day, skill_name, skill_limit)
 
     print(on_duty)
 
