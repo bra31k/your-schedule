@@ -27,6 +27,8 @@ class Duty_setting(models.Model):
     day_num = models.IntegerField(default=1)
     day_name = models.CharField(max_length=30)
     skills_per_day = models.ManyToManyField(Skills_limits)
+    avg_income = models.IntegerField(default=1)
+    worked_hours_in_day = models.IntegerField(default=8)
 
     def __str__(self):
         return self.day_name
@@ -43,6 +45,7 @@ class Users(models.Model):
     id_user = models.IntegerField(default=1)
     userName = models.CharField(max_length=30)
     daysoff = models.CharField(max_length=7)
+    days_worked = models.IntegerField(default=0)
 
     def __str__(self):
         return self.userName
@@ -64,11 +67,35 @@ class DayResults(models.Model):
     def __str__(self):
         return str(self.date)
 
-#@receiver('post_save', sender=DayResults)
-#def update_rating(sender, instance, **kwargs):
-#    instance.income
-#    for res in instance.userdayresult_set
-#        res.user
+
+@receiver(post_save, sender=DayResults)
+def update_rating(sender, instance, **kwargs):
+    instance.income
+    instance.date
+    count = 0
+    duty = Duty_setting.objects.all()
+    for user_day_result in UserDayResults.objects.all():
+        if str(user_day_result.day) == str(instance.date):
+            count += 1
+    for user_day_result in UserDayResults.objects.all():
+        if str(user_day_result.day) == str(instance.date):
+            avg_price = duty.values_list('avg_income', flat=True).get(day_num=instance.day_num)
+            if avg_price <= instance.income:
+                rating = Rating.objects.get(user=user_day_result.user, skill=user_day_result.skill)
+                rating.value += instance.income / count / 10000
+                rating.save()
+                worked = Users.objects.get(userName=user_day_result.user)
+                worked.days_worked += 1
+                worked.save()
+            if avg_price > instance.income:
+                rating = Rating.objects.get(user=user_day_result.user, skill=user_day_result.skill)
+                rating.value -= instance.income / count / 10000
+                rating.save()
+                worked = Users.objects.get(userName=user_day_result.user)
+                worked.days_worked += 1
+                worked.save()
+
+
 
 class UserDayResults(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
