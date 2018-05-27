@@ -70,30 +70,44 @@ class DayResults(models.Model):
 
 @receiver(post_save, sender=DayResults)
 def update_rating(sender, instance, **kwargs):
+
     instance.income
     instance.date
     count = 0
     duty = Duty_setting.objects.all()
+
+    def worked_change(day, user):
+        worked = Users.objects.get(userName=user)
+        worked.days_worked += day
+        worked.save()
+
+    def rating_change(point, user, skill):
+        rating = Rating.objects.get(user=user, skill=skill)
+        rating.value += point
+        rating.save()
+
     for user_day_result in UserDayResults.objects.all():
         if str(user_day_result.day) == str(instance.date):
             count += 1
     for user_day_result in UserDayResults.objects.all():
         if str(user_day_result.day) == str(instance.date):
             avg_price = duty.values_list('avg_income', flat=True).get(day_num=instance.day_num)
+            print(user_day_result.day, instance.date)
+            if str(user_day_result.day) == str(instance.date):
+                rating_change(-(user_day_result.change_point_rating),user_day_result.user, user_day_result.skill)
+                user_day_result.change_point_rating = 0
+                user_day_result.save()
+                worked_change(-1, user_day_result.user)
             if avg_price <= instance.income:
-                rating = Rating.objects.get(user=user_day_result.user, skill=user_day_result.skill)
-                rating.value += instance.income / count / 10000
-                rating.save()
-                worked = Users.objects.get(userName=user_day_result.user)
-                worked.days_worked += 1
-                worked.save()
+                user_day_result.change_point_rating += instance.income / count / 10000
+                user_day_result.save()
+                rating_change(user_day_result.change_point_rating, user_day_result.user, user_day_result.skill)
+                worked_change(1, user_day_result.user)
             if avg_price > instance.income:
-                rating = Rating.objects.get(user=user_day_result.user, skill=user_day_result.skill)
-                rating.value -= instance.income / count / 10000
-                rating.save()
-                worked = Users.objects.get(userName=user_day_result.user)
-                worked.days_worked += 1
-                worked.save()
+                user_day_result.change_point_rating -= instance.income / count / 10000
+                user_day_result.save()
+                rating_change(user_day_result.change_point_rating, user_day_result.user, user_day_result.skill)
+                worked_change(1, user_day_result.user)
 
 
 
@@ -101,9 +115,11 @@ class UserDayResults(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     day = models.ForeignKey(DayResults, on_delete=models.CASCADE)
+    change_point_rating = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.user)
+
 
 
 
