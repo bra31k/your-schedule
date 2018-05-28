@@ -65,7 +65,7 @@ class DayResultView(FormView):
                             on_duty[day][key].remove(user)
                 del_key = 0
 
-        def change_skill(day, skill_name):
+        def change_skill(day, cur_day, skill_name, skill_limit):
             keys = on_duty[day].keys()
             for key in keys:
                 key != skill_name
@@ -75,8 +75,7 @@ class DayResultView(FormView):
                         if len(skillz) > 1:
                             on_duty[day][key].remove(user)
                             on_duty[day][skill_name].append(user)
-                            return True
-            return False
+                            fill_one_user(cur_day, skill_name, skill_limit)
 
         def get_overlay(day, skill_name, skill_limit):
             on_duty_with_skill = len(on_duty[day][skill_name])
@@ -121,19 +120,15 @@ class DayResultView(FormView):
                     on_duty[next_day][skill_name].remove(finded_user)
             else:
                 for next_day in days_all:
-                    if change_skill(next_day, skill_name):
-                        fill_one_user(cur_day, skill_name, skill_limit)
-                        break
+                    change_skill(next_day, cur_day, skill_name, skill_limit)
 
         for day in days_all:
             for skill_per_day in day.skills_per_day.all():
-                # print(skill_per_day)
                 skill_name = skill_per_day.skill.nameSkill
                 del_dublicate(day, skill_name)
                 on_duty_with_skill = len(on_duty[day][skill_name])
                 if on_duty_with_skill < skill_limit[day][skill_name]:
                     for count in range(skill_limit[day][skill_name] - on_duty_with_skill):
-                        # print(day.id, skill_name, 'find')
                         fill_one_user(day, skill_name, skill_limit)
 
         context_data = self.get_context_data()
@@ -145,6 +140,8 @@ class DayResultView(FormView):
         base_day = datetime.datetime.strptime(request.POST.get('base_day'), "%d-%m-%Y").date()
         for num, day in enumerate(Duty_setting.objects.all()):
             daydata = request.POST.getlist('daydata-%s' % day.day_name)
+            if len(DayResults.objects.filter(date=base_day+datetime.timedelta(days=num))) > 0:
+                continue
             cur_day = DayResults(date=base_day+datetime.timedelta(days=num), income=0, day_num=day.day_num)
             cur_day.save()
             for pair in daydata:
