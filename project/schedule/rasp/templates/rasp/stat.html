@@ -8,8 +8,33 @@
 <p><b>Построить график динамики выручки за неделю:</b><br>
 <form name="date" method="post" action="income">
     {% csrf_token %}
-  <p><b>Введите дату:</b><br>
-   <input type="text" size="40" name="date">
-  </p>
+        <p><b>Введите начальную дату:</b><br>
+        <select name="date_start">
+            {% for date in dates %}
+                <option name="date_start" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+        </select>
+        <p><b>Введите конечную дату:</b><br>
+            <select name="date_final">
+            {% for date in dates %}
+                <option name="date_final" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+        </select>
+        </p>
+    <input type="submit" value="Построить" />
 </form>
+    <br>
+    <form name="date" action="rating">
+        <p><b>Показать таблицу рейтинга сотрудников?</b><br>
+        <input type="submit" value="Показать" />
+            </form>
+    <form name="user" action="dynamic_rating" method="POST">
+        {% csrf_token %}
+        <select name="user">
+            {% for user in users %}
+                <option name="user" value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+            <input type="submit" value="Показать" />
+        </select>
+            </form>
 {% endblock %}

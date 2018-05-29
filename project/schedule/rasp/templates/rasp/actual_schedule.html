@@ -1,0 +1,18 @@
+<!-- templates/home.html-->
+{% extends "admin/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% for day in day_results %}
+    <div>
+        <ul>
+        <p><b>{{ day.date|date:"l" }}</b>
+        {% for user in day.userdayresults_set.all %}
+        <li>
+            <p><em>{{ user.user.first_name }} {{ user.user.last_name}}</em></p>
+        {% endfor %}
+             </ul>
+        </div>
+    {% endfor %}
+{% endblock %}

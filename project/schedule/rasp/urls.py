@@ -9,6 +9,8 @@ urlpatterns = [
     path('schedule/company', views.company, name='compa ny'),
     path('schedule/', views.DayResultView.as_view(), name='schedule'),
     path('stat/rating', views.getRating, name='rating'),
-    path('stat/', views.income, name='stat'),
+    path('stat/', views.stat, name='stat'),
     path('stat/income', views.income, name='income'),
+    path('actual_schedule/', views.actual_schedule, name='actual_schedule'),
+    path('stat/dynamic_rating', views.dynamic_rating, name='dynamic_rating')
 ]

@@ -7,7 +7,6 @@
 <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
 &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
 &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
--> <a href='/dodo'>kugkfk</a>
 </div>
 {% endblock %}
 
@@ -23,7 +22,7 @@
         <tbody>
             {% for rating in ratings %}
                 <tr>
-                    <td><b> {{ rating }} </b></td>
+                    <td><b> {{ rating.user.first_name }} {{rating.user.last_name}} </b></td>
                     <td> {{ rating.skill }} </td>
                     <td> {{ rating.value }} </td>
                 </tr>

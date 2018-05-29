@@ -48,7 +48,7 @@ class WeekendSetting(models.Model):
 class Rating(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    value = models.IntegerField(default=1)
+    value = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.user)
@@ -77,7 +77,13 @@ def update_rating(sender, instance, **kwargs):
     def rating_change(point, user, skill):
         rating = Rating.objects.get(user=user, skill=skill)
         rating.value += point
+        rating.value = round(rating.value, 1)
         rating.save()
+
+    def sum_percentage(value, user):
+        sum = Users.objects.get(username=user)
+        sum.sum_precentage += sum.precentage/100 * value
+        sum.save()
 
     for user_day_result in UserDayResults.objects.all():
         if str(user_day_result.day) == str(instance.date):
@@ -90,6 +96,7 @@ def update_rating(sender, instance, **kwargs):
                     rating_change(-(user_day_result.change_point_rating), user_day_result.user, user_day_result.skill)
                 if user_day_result.change_point_rating < 0:
                     rating_change(user_day_result.change_point_rating, user_day_result.user, user_day_result.skill)
+                sum_percentage((-(user_day_result.change_point_rating * 10000 * count)), user_day_result.user)
                 user_day_result.change_point_rating = 0
                 user_day_result.save()
                 worked_change(-1, user_day_result.user)
@@ -97,11 +104,13 @@ def update_rating(sender, instance, **kwargs):
                 user_day_result.change_point_rating += instance.income / count / 10000
                 user_day_result.save()
                 rating_change(user_day_result.change_point_rating, user_day_result.user, user_day_result.skill)
+                sum_percentage(instance.income, user_day_result.user)
                 worked_change(1, user_day_result.user)
             if avg_price > instance.income:
                 user_day_result.change_point_rating -= instance.income / count / 10000
                 user_day_result.save()
                 rating_change(user_day_result.change_point_rating, user_day_result.user, user_day_result.skill)
+                sum_percentage(instance.income, user_day_result.user)
                 worked_change(1, user_day_result.user)
 
 
@@ -110,7 +119,7 @@ class UserDayResults(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     day = models.ForeignKey(DayResults, on_delete=models.CASCADE)
-    change_point_rating = models.IntegerField(default=0)
+    change_point_rating = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.user)

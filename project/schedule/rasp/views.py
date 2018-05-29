@@ -35,6 +35,7 @@ class DayResultView(FormView):
     template_name = 'rasp/schedule.html'
     form_class = DayResultForm
     success_url = '/admin/rasp/dayresults/'
+
     def get(self, request, *args, **kwargs):
         on_duty = {}
         users_daysoff = {}
@@ -80,6 +81,7 @@ class DayResultView(FormView):
                             on_duty[day][key].remove(user)
                             on_duty[day][skill_name].append(user)
                             fill_one_user(cur_day, skill_name, skill_limit)
+                            break
 
         def get_overlay(day, skill_name, skill_limit):
             on_duty_with_skill = len(on_duty[day][skill_name])
@@ -126,6 +128,7 @@ class DayResultView(FormView):
                 for next_day in days_all:
                     change_skill(next_day, cur_day, skill_name, skill_limit)
 
+
         for day in days_all:
             for skill_per_day in day.skills_per_day.all():
                 skill_name = skill_per_day.skill.nameSkill
@@ -157,28 +160,72 @@ class DayResultView(FormView):
 
         return super().post(request, *args, **kwargs)
 
+
 def getRating(request):
     has_permission = not request.user.is_anonymous
-    ratings = Rating.objects.all()
+    ratings = Rating.objects.order_by('-value').all()
     opts = Rating._meta
     return render(request, 'rasp/rating.html', {'ratings': ratings, 'has_permission' : has_permission, 'opts' : opts})
 
 def income(request):
     if request.method == "POST":
-        dates = datetime.datetime.strptime(request.POST.get('date'), "%d-%m-%Y").date()
+        date_start = datetime.datetime.strptime(request.POST.get('date_start'), "%Y-%m-%d").date()
+        date_final = datetime.datetime.strptime(request.POST.get('date_final'), "%Y-%m-%d").date()
         income_data = []
         date = []
         day_results = []
-        for num, day in enumerate(Duty_setting.objects.all()):
-            day_results.append(DayResults.objects.get(date=dates+datetime.timedelta(days=num)))
+        for num in range(DayResults.objects.get(date=date_final).id - DayResults.objects.get(date=date_start).id + 1):
+            day_results.append(DayResults.objects.get(date=date_start+datetime.timedelta(days=num)))
         for day in day_results:
             income_data.append(str(day.income))
             date.append(str(day.date))
 
-        return render(request, 'rasp/income.html', {'income_data': ','.join(income_data), 'x_labels' : date})
+        return render(request, 'rasp/income.html', {'income_data': ','.join(income_data), 'x_labels': date})
 
-    else:
-        return render(request, 'rasp/stat.html')
+def stat(request):
+
+    dates = []
+    for day in DayResults.objects.all():
+        dates.append(str(day.date))
+
+    users = []
+    for user in Users.objects.all():
+        users.append(user.username)
+
+    return render(request, 'rasp/stat.html', {'dates': dates, 'users': users})
+
+def actual_schedule(request):
+
+    date = datetime.datetime.date(datetime.datetime.now())
+
+    if DayResults.objects.filter(date=date).exists():
+        monday = date - datetime.timedelta(days=date.weekday())
+        sunday = monday + datetime.timedelta(days=6)
+        day_results = DayResults.objects.filter(date__gte=monday, date__lte= sunday)
+
+    return render(request, 'rasp/actual_schedule.html', {'day_results': day_results})
+
+def dynamic_rating(request):
+
+    if request.method == "POST":
+        rates = []
+        dates = []
+        username = request.POST.get('user')
+        changes_rating = UserDayResults.objects.filter(user__username=username)
+
+        for num, rate in enumerate(changes_rating):
+            rates.append(round(rate.change_point_rating,1))
+            dates.append(rate.day)
+
+
+        change = 0
+        for num in range(len(rates)):
+            rates[num] = change + rates[num]
+            change = rates[num]
+
+        print(str(rates))
+
+        return render(request, 'rasp/dynamic_rating.html', {'rates': str(rates), 'dates': dates})
 
 
 

@@ -8,9 +8,9 @@
   Hi {{ user.username }}!
   <p><a href="{% url 'logout' %}">logout</a></p>
   <form>
-  <input type="button" value="Показать расписание" onClick='location.href="/rasp/schedule"'>
+  <input type="button" value="Показать расписание" onClick='location.href="/rasp/actual_schedule"'>
     <input type="button" value="Выбрать выходные" onClick='location.href="/rasp/daysoff"'>
-    <input type="button" value="Показать рейтинг" onClick='location.href="/rasp/stat/rating"'>
+    <input type="button" value="Перейти к статистике" onClick='location.href="/rasp/stat/"'>
   </form>
 {% else %}
   <p>You are not logged in</p>
