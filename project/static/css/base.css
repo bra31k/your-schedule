@@ -1,0 +1,16 @@
+.head-nav {
+}
+.head-nav-links {
+    text-align: center;
+    padding-left: 0;
+    list-style: none;
+    align-self: center;
+}
+
+.head-nav-link {
+    display: inline-block;
+}
+
+.title-container {
+    float: left;
+}

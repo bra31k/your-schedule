@@ -1,9 +1,9 @@
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 {% load i18n admin_urls static admin_list %}
-{% block title %}{% endblock %}
+{% block page_title %}{% endblock %}
 
 
-{% block content %}
+{% block logged_content %}
 
 <p><b>Построить график динамики выручки за неделю:</b><br>
 <form name="date" method="post" action="income">

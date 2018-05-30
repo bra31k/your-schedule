@@ -1,9 +1,9 @@
 <!-- templates/home.html-->
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 
-{% block title %}Home{% endblock %}
+{% block page_title %}Actual schedule{% endblock %}
 
-{% block content %}
+{% block logged_content %}
     {% for day in day_results %}
     <div>
         <ul>

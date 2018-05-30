@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 {% load static %}
 {% block extrahead %}
 <script src="{% static 'highcharts/highcharts.js' %}"></script>
@@ -18,9 +18,9 @@
 </style>
 {% endblock %}
 {% load utils %}
-{% block title %}Home{% endblock %}
+{% block page_title %}Income{% endblock %}
 
-{% block content %}
+{% block logged_content %}
 <div id="container-income"></div>
 <script>
     (function(){Highcharts.chart('container-income', {

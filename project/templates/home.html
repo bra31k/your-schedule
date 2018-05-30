@@ -1,19 +1,46 @@
 <!-- templates/home.html-->
 {% extends "admin/base.html" %}
+{% load i18n static %}
 
-{% block title %}Home{% endblock %}
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
+{% endblock %}
+
+{% block usertools %}
+  <div id="user-tools">
+    {% block welcome-msg %}
+        {% trans 'Welcome,' %}
+        <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+    {% endblock %}
+    {% if user.has_usable_password %}
+    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+    {% endif %}
+    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+  </div>
+  <div class="head-nav">
+      <div class="title-container">{% block page_title %}{% endblock %}</div>
+    <ul class="head-nav-links">
+      <li class="head-nav-link">
+        <a href="/rasp/actual_schedule">Показать расписание</a>
+      </li>
+      <li class="head-nav-link">
+        <a href="/rasp/daysoff">Выбрать выходные</a>
+      </li>
+      <li class="head-nav-link">
+        <a href="/rasp/stat/">Перейти к статистике</a>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-  <form>
-  <input type="button" value="Показать расписание" onClick='location.href="/rasp/actual_schedule"'>
-    <input type="button" value="Выбрать выходные" onClick='location.href="/rasp/daysoff"'>
-    <input type="button" value="Перейти к статистике" onClick='location.href="/rasp/stat/"'>
-  </form>
-{% else %}
-  <p>You are not logged in</p>
-<a href="{% url 'login' %}">login</a>
-{% endif %}
+  {% if user.is_authenticated %}
+    {% block logged_content %}{% endblock %}
+  {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">login</a>
+  {% endif %}
 {% endblock %}

@@ -1,21 +1,14 @@
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 
-{% block title %}Home{% endblock %}
+{% block page_title %}Company{% endblock %}
 
-{% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-<a href="{% url 'login' %}">login</a>
-{% endif %}
-<form action="schedule/" method="post">
+{% block logged_content %}
+  <form action="schedule/" method="post">
     {% csrf_token %}
     <select name="comp[]" id="comp{{ forloop.counter }}" value="{{ comp.id }}" size="2"/>
     {% for comp in comps %}
-        <option for="comp{{ forloop.counter }}"> {{ comp }} </option><br />
+      <option for="comp{{ forloop.counter }}"> {{ comp }} </option><br />
     {% endfor %}
-<input type="submit" value="vote" />
-    </form>
+  <input type="submit" value="vote" />
+  </form>
 {% endblock %}

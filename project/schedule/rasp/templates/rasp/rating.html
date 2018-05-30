@@ -1,6 +1,6 @@
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 {% load i18n admin_urls static admin_list %}
-{% block title %}{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
@@ -10,7 +10,7 @@
 </div>
 {% endblock %}
 
-{% block content %}
+{% block logged_content %}
     <table>
         <thead>
             <tr>

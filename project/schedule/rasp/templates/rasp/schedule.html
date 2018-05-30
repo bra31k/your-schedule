@@ -1,12 +1,9 @@
-{% extends "admin/base.html" %}
+{% extends "home.html" %}
 {% load utils %}
 
-{% block title %}Home{% endblock %}
+{% block page_title %}Schedule{% endblock %}
 
-{% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
+{% block logged_content %}
   <form method="post">
     {% csrf_token %}
     {{ form }}
@@ -30,8 +27,4 @@
   </div>
   {% endfor %}
   </form>
-{% else %}
-  <p>You are not logged in</p>
-<a href="{% url 'login' %}">login</a>
-{% endif %}
 {% endblock %}
