@@ -4,12 +4,6 @@ from django.dispatch import receiver
 from schedule.users.models import Users
 
 
-class Company(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
-
 class Skill(models.Model):
     nameSkill = models.CharField(max_length=30)
 

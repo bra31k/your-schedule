@@ -4,27 +4,12 @@
 {% block page_title %}Schedule{% endblock %}
 
 {% block logged_content %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Сохранить?" />
-  {% for day_name, day in res.items %}
-  <div>
-    <ul>
-    <p><b>{{ day_name }}</b></p>
-    {% for skill, users in day.items %}
-      <li>
-        <p><em>{{ skill }}</em></p>
-        <div>
-          {% for user in users %}
-          <input type="hidden" name="daydata-{{day_name}}" value='{{skill}}:{{user.id}}'/>
-          <p>{{ user.first_name }} {{ user.last_name }}</p>
-          {% endfor %}
-        </div>
-      </li>
-    {% endfor %}
-    </ul>
-  </div>
-  {% endfor %}
-  </form>
+{% if user.group == admin %}
+    <p><a href="get_schedule">Составить расписание</a></p>
+    <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
+    <p><a href="daysoff">Выбор выходных</a></p>
+{% else %}
+    <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
+    <p><a href="daysoff">Выбор выходных</a></p>
+{% endif %}
 {% endblock logged_content%}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Duty_setting, Users, Company, WeekendSetting, Skills_limits, Skill, Rating, DayResults, UserDayResults
+from .models import Duty_setting, Users, WeekendSetting, Skill, Rating, DayResults, UserDayResults
 from django.views.generic.edit import FormView
 from .forms import DayResultForm
 import datetime
@@ -31,7 +31,7 @@ def vote(request):
 
 
 class DayResultView(FormView):
-    template_name = 'rasp/schedule.html'
+    template_name = 'rasp/get_schedule.html'
     form_class = DayResultForm
     success_url = '/admin/rasp/dayresults/'
 
@@ -210,6 +210,9 @@ def actual_schedule(request):
         day_results = DayResults.objects.filter(date__gte=monday, date__lte= sunday)
 
     return render(request, 'rasp/actual_schedule.html', {'day_results': day_results})
+
+def schedule(request):
+    return render(request, 'rasp/schedule.html')
 
 def dynamic_rating(request):
 
