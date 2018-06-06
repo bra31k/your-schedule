@@ -1,15 +1,15 @@
 {% extends "home.html" %}
 {% load utils %}
 
-{% block page_title %}Schedule{% endblock %}
+{% block page_title %}Расписание{% endblock %}
 
 {% block logged_content %}
-{% if user.group == admin %}
-    <p><a href="get_schedule">Составить расписание</a></p>
-    <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
-    <p><a href="daysoff">Выбор выходных</a></p>
-{% else %}
-    <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
-    <p><a href="daysoff">Выбор выходных</a></p>
-{% endif %}
+    {% if user.group == admin %}
+        <p><a href="get_schedule">Составить расписание</a></p>
+        <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
+        <p><a href="daysoff">Выбор выходных</a></p>
+    {% else %}
+        <p><a href="actual_schedule">Посмотреть актуальное расписание</a></p>
+        <p><a href="daysoff">Выбор выходных</a></p>
+    {% endif %}
 {% endblock logged_content%}
