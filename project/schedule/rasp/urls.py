@@ -12,5 +12,7 @@ urlpatterns = [
     path('stat/', views.stat, name='stat'),
     path('stat/income', views.income, name='income'),
     path('actual_schedule/', views.actual_schedule, name='actual_schedule'),
-    path('stat/dynamic_rating', views.dynamic_rating, name='dynamic_rating')
+    path('stat/dynamic_rating', views.dynamic_rating, name='dynamic_rating'),
+    path('pay/', views.pay, name='pay'),
+    path('pay/payroll_preparation', views.payroll_preparation, name='payroll_preparation')
 ]

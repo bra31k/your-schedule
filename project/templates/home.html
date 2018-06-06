@@ -16,20 +16,25 @@
     {% if user.has_usable_password %}
     <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
     {% endif %}
-    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+    <a href="{% url 'admin:logout' %}">{% trans 'Login' %}</a>
   </div>
   <div class="head-nav">
       <div class="title-container">{% block page_title %}{% endblock %}</div>
     <ul class="head-nav-links">
       <li class="head-nav-link">
-        <a href="/rasp/actual_schedule">Показать расписание</a>
+        <a href='/'><strong>Главная</strong></a>
+      </li>
+      <li class="head-nav-link">
+        <a href="/rasp/actual_schedule">Расписание</a>
       </li>
       <li class="head-nav-link">
         <a href="/rasp/daysoff">Выбрать выходные</a>
       </li>
       <li class="head-nav-link">
-        <a href="/rasp/stat/">Перейти к статистике</a>
+        <a href="/rasp/stat/">Cтатистика</a>
       </li>
+      <li class="head-nav-link">
+        <a href="/admin/rasp">Настройки</a>
     </ul>
   </div>
 {% endblock %}

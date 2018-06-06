@@ -25,10 +25,9 @@ def vote(request):
         if len(listObject) == weekends.values_list('weekendsPerWeek', flat=True).get():
             for days in listObject:
                 list_days_off += days
-            personal = Users(daysoff=list_days_off, username=request.user.username)
-            personal.save()
-            selected_daysoff = Duty_setting.objects.get(pk=listObject[1])
-            return render(request, 'rasp/vote.html', {'daysoffs': selected_daysoff})
+            request.user.daysoff = list_days_off
+            request.user.save()
+            return render(request, 'rasp/vote.html', {'daysoffs': list_days_off})
 
 
 class DayResultView(FormView):
@@ -37,6 +36,13 @@ class DayResultView(FormView):
     success_url = '/admin/rasp/dayresults/'
 
     def get(self, request, *args, **kwargs):
+
+        check = False
+
+        for user in Users.objects.all():
+            if len(user.daysoff) == 0:
+                check = True
+
         on_duty = {}
         users_daysoff = {}
         skill_limit = {}
@@ -227,6 +233,33 @@ def dynamic_rating(request):
 
         return render(request, 'rasp/dynamic_rating.html', {'rates': str(rates), 'dates': dates})
 
+
+def pay(request):
+    dates = []
+    for day in DayResults.objects.all():
+        dates.append(str(day.date))
+
+    users = []
+    for user in Users.objects.all():
+        users.append(user.username)
+
+    return render(request, 'rasp/pay.html', {'dates': dates, 'users': users})
+
+def payroll_preparation(request):
+    if request.method == "POST":
+        username = request.POST.get('user')
+        date_start = datetime.datetime.strptime(request.POST.get('date_start'), "%Y-%m-%d").date()
+        date_final = datetime.datetime.strptime(request.POST.get('date_final'), "%Y-%m-%d").date()
+        user = Users.objects.get(username=username)
+        day_results = []
+        for num in range(DayResults.objects.get(date=date_final).id - DayResults.objects.get(date=date_start).id + 1):
+            if DayResults.objects.filter(date=date_start + datetime.timedelta(days=num),userdayresults__user__username=username):
+                day_results.append(DayResults.objects.get(date=date_start + datetime.timedelta(days=num)))
+        payroll = (user.salary/((7-len(user.daysoff))*4))*len(day_results)
+        for day_result in day_results:
+            payroll += (day_result.income/100 * user.precentage)
+        payroll = round(payroll, 2)
+        return render(request, 'rasp/payroll_preparation.html', {'payroll': payroll})
 
 
 

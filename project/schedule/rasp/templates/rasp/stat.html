@@ -4,17 +4,17 @@
 
 
 {% block logged_content %}
-
+{% if user.group == admin %}
 <p><b>Построить график динамики выручки за неделю:</b><br>
 <form name="date" method="post" action="income">
     {% csrf_token %}
-        <p><b>Введите начальную дату:</b><br>
+        <p>Введите начальную дату:<br>
         <select name="date_start">
             {% for date in dates %}
                 <option name="date_start" value="{{date}}">{{ date }}</option>
             {% endfor %}
         </select>
-        <p><b>Введите конечную дату:</b><br>
+        <p>Введите конечную дату:</b><br>
             <select name="date_final">
             {% for date in dates %}
                 <option name="date_final" value="{{date}}">{{ date }}</option>
@@ -25,10 +25,11 @@
 </form>
     <br>
     <form name="date" action="rating">
-        <p><b>Показать таблицу рейтинга сотрудников?</b><br>
+        <p>Таблица рейтинга сотрудников:<br>
         <input type="submit" value="Показать" />
             </form>
-    <form name="user" action="dynamic_rating" method="POST">
+<form name="user" action="dynamic_rating" method="POST">
+    <p>График роста рейтинга сотрудников:</b><br>
         {% csrf_token %}
         <select name="user">
             {% for user in users %}
@@ -36,5 +37,12 @@
             {% endfor %}
             <input type="submit" value="Показать" />
         </select>
+    </p>
+</form>
+{% else %}
+<form name="date" action="rating">
+        <p><b>Показать таблицу рейтинга сотрудников?</b><br>
+        <input type="submit" value="Показать" />
             </form>
+{% endif %}
 {% endblock %}

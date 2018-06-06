@@ -4,12 +4,16 @@
 {% block page_title %}Daysoff{% endblock %}
 
 {% block logged_content %}
+  {% if user.daysoff != 0 %}
+  <p>Вы уже выбрали выходые дни на неделю</p>
+  {% else %}
   <form action="vote/" method="post">
-    {% csrf_token %}
-    {% for daysoff in daysoffs %}
-      <input type="checkbox" name="daysoff[]" id="daysoff{{ forloop.counter }}" value="{{ daysoff.id }}" />
-      <label for="daysoff{{ forloop.counter }}">{{ daysoff }}</label><br />
-    {% endfor %}
-    <input type="submit" value="vote" />
-  </form>
+      {% csrf_token %}
+      {% for daysoff in daysoffs %}
+        <input type="checkbox" name="daysoff[]" id="daysoff{{ forloop.counter }}" value="{{ daysoff.id }}" />
+        <label for="daysoff{{ forloop.counter }}">{{ daysoff }}</label><br />
+      {% endfor %}
+      <input type="submit" value="vote" />
+    </form>
+  {% endif %}
 {% endblock %}

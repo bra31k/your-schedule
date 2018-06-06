@@ -4,6 +4,7 @@
 {% block page_title %}Actual schedule{% endblock %}
 
 {% block logged_content %}
+    <table>
     {% for day in day_results %}
     <div>
         <ul>
@@ -15,4 +16,5 @@
              </ul>
         </div>
     {% endfor %}
+</table>
 {% endblock %}
