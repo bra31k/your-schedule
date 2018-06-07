@@ -9,6 +9,10 @@
 
 .head-nav-link {
     display: inline-block;
+    margin: 0 20px;
+}
+.head-nav-link a {
+    font-size: 15px;
 }
 
 .title-container {

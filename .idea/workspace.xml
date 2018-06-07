@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d1d47a97-8236-418a-861f-75876a285214" name="Default" comment="добавил учет опозданий,">
-      <change beforePath="" afterPath="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/tardiness.html" />
+    <list default="true" id="d1d47a97-8236-418a-861f-75876a285214" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/project/db.sqlite3" afterPath="$PROJECT_DIR$/project/db.sqlite3" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/admin.py" afterPath="$PROJECT_DIR$/project/schedule/rasp/admin.py" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/models.py" afterPath="$PROJECT_DIR$/project/schedule/rasp/models.py" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html" afterPath="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/schedule.html" afterPath="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/schedule.html" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/urls.py" afterPath="$PROJECT_DIR$/project/schedule/rasp/urls.py" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/rasp/views.py" afterPath="$PROJECT_DIR$/project/schedule/rasp/views.py" />
-      <change beforePath="$PROJECT_DIR$/project/schedule/users/models.py" afterPath="$PROJECT_DIR$/project/schedule/users/models.py" />
+      <change beforePath="$PROJECT_DIR$/project/static/css/base.css" afterPath="$PROJECT_DIR$/project/static/css/base.css" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,6 +21,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="base.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/project/static/css/base.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="294">
+              <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/project/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="164">
+              <caret line="37" column="29" lean-forward="false" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="daysoff.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templates/rasp/daysoff.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -39,24 +51,32 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="payroll_preparation.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html">
+      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/project/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="11" column="37" lean-forward="false" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+            <state relative-caret-position="563">
+              <caret line="27" column="47" lean-forward="true" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/project/schedule/rasp/models.py">
+        <entry file="file://$PROJECT_DIR$/project/schedule/users/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="60" column="46" lean-forward="false" selection-start-line="60" selection-start-column="46" selection-end-line="60" selection-end-column="46" />
-              <folding>
-                <element signature="e#1570#3962#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="168">
+              <caret line="9" column="45" lean-forward="false" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="payroll_preparation.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="10" column="37" lean-forward="false" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -79,16 +99,6 @@
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/project/schedule/users/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="9" column="45" lean-forward="false" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -191,7 +201,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/project/shedule/urls.py" />
         <option value="$PROJECT_DIR$/project/rasp/templates/rasp/shedule.html" />
         <option value="$PROJECT_DIR$/project/manage.py" />
         <option value="$PROJECT_DIR$/project/schedule/wsgi.py" />
@@ -223,7 +232,6 @@
         <option value="$PROJECT_DIR$/project/templates/registration/login.html" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/daysoff.html" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/vote.html" />
-        <option value="$PROJECT_DIR$/project/templates/home.html" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/forms.py" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/pay.html" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/stat.html" />
@@ -242,6 +250,8 @@
         <option value="$PROJECT_DIR$/project/schedule/users/models.py" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/views.py" />
         <option value="$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html" />
+        <option value="$PROJECT_DIR$/project/templates/home.html" />
+        <option value="$PROJECT_DIR$/project/static/css/base.css" />
       </list>
     </option>
   </component>
@@ -308,6 +318,13 @@
               <item name="project" type="462c0819:PsiDirectoryNode" />
               <item name="schedule" type="462c0819:PsiDirectoryNode" />
               <item name="rasp" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="schedule" type="462c0819:PsiDirectoryNode" />
+              <item name="rasp" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -323,6 +340,17 @@
               <item name="project" type="462c0819:PsiDirectoryNode" />
               <item name="schedule" type="462c0819:PsiDirectoryNode" />
               <item name="users" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="app" type="b2602c69:ProjectViewProjectNode" />
@@ -535,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1528373429121</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="добавил учет опозданий и изменение рейтинга с учетом опозданий">
+      <created>1528382529915</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1528382529915</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TodoView">
@@ -621,7 +656,8 @@
     <MESSAGE value="Добавил подсчет заработной платы" />
     <MESSAGE value="Переработал шапку" />
     <MESSAGE value="-" />
-    <option name="LAST_COMMIT_MESSAGE" value="-" />
+    <MESSAGE value="добавил учет опозданий и изменение рейтинга с учетом опозданий" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил учет опозданий и изменение рейтинга с учетом опозданий" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -642,7 +678,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/logic.py" />
     <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/logic (2).py" />
     <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templatetags/utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -829,14 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/project/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="27" column="31" lean-forward="false" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templates/rasp/income.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
@@ -869,14 +896,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="590">
           <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="45" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/project/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="37" column="29" lean-forward="false" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -920,7 +939,7 @@
         <state relative-caret-position="231">
           <caret line="11" column="25" lean-forward="true" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1001,8 +1020,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/project/schedule/rasp/templates/rasp/payroll_preparation.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="37" lean-forward="false" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+        <state relative-caret-position="210">
+          <caret line="10" column="37" lean-forward="false" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="37" column="29" lean-forward="false" selection-start-line="37" selection-start-column="29" selection-end-line="37" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="563">
+          <caret line="27" column="47" lean-forward="true" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project/static/css/base.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
           <folding />
         </state>
       </provider>
