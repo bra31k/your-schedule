@@ -9,6 +9,7 @@ urlpatterns = [
     path('schedule/daysoff/vote/', views.vote, name='vote'),
     path('schedule/get_schedule/', views.DayResultView.as_view(), name='get_schedule'),
     path('schedule/actual_schedule/', views.actual_schedule, name='actual_schedule'),
+    path('schedule/tardiness/', views.tardiness, name='tardiness'),
     path('stat/', views.stat, name='stat'),
     path('stat/rating', views.getRating, name='rating'),
     path('stat/income', views.income, name='income'),

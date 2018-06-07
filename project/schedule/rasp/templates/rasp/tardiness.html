@@ -1,0 +1,48 @@
+{% extends "home.html" %}
+
+{% block page_title %}Опоздание{% endblock %}
+
+{% block logged_content %}
+{% if request.POST %}
+    {% if user_is_finded %}
+        <p>Значение рейтинга изменены</p>
+    {% else %}
+    <form name="user" action="/rasp/schedule/tardiness/" method="POST">
+        <p>Выберите дату:<br>
+            <select name="date">
+                {% for date in dates %}
+                    <option name="date" value="{{date}}">{{ date }}</option>
+                {% endfor %}
+            </select>
+        <p>Выберите сотрудника:</b><br>
+            {% csrf_token %}
+            <select name="user">
+                {% for user in users %}
+                    <option name="user" value="{{ user }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+                <input type="submit" value="Сохранить" />
+            </select>
+        </p>
+    </form>
+        <p>Выбранные сотрудник не работал в этот день</p>
+    {% endif %}
+{% else %}
+    <form name="user" action="/rasp/schedule/tardiness/" method="POST">
+        <p>Выберите дату:<br>
+            <select name="date">
+                {% for date in dates %}
+                    <option name="date" value="{{date}}">{{ date }}</option>
+                {% endfor %}
+            </select>
+        <p>Выберите сотрудника:</b><br>
+            {% csrf_token %}
+            <select name="user">
+                {% for user in users %}
+                    <option name="user" value="{{ user }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+                <input type="submit" value="Сохранить" />
+            </select>
+        </p>
+    </form>
+{% endif %}
+{% endblock %}

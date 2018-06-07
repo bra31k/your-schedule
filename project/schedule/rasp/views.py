@@ -3,9 +3,6 @@ from .models import Duty_setting, Users, WeekendSetting, Skill, Rating, DayResul
 from django.views.generic.edit import FormView
 from .forms import DayResultForm
 import datetime
-# from django.http import HttpResponseRedirect
-# from .forms import PersonalVotesForm
-
 
 
 def daysoff(request):
@@ -169,6 +166,7 @@ def getRating(request):
     opts = Rating._meta
     return render(request, 'rasp/rating.html', {'ratings': ratings, 'has_permission' : has_permission, 'opts' : opts})
 
+
 def income(request):
     if request.method == "POST":
         date_start = datetime.datetime.strptime(request.POST.get('date_start'), "%Y-%m-%d").date()
@@ -184,6 +182,7 @@ def income(request):
 
         return render(request, 'rasp/income.html', {'income_data': ','.join(income_data), 'x_labels': date})
 
+
 def stat(request):
 
     dates = []
@@ -196,6 +195,7 @@ def stat(request):
 
     return render(request, 'rasp/stat.html', {'dates': dates, 'users': users})
 
+
 def actual_schedule(request):
 
     date = datetime.datetime.date(datetime.datetime.now())
@@ -207,8 +207,40 @@ def actual_schedule(request):
 
     return render(request, 'rasp/actual_schedule.html', {'day_results': day_results})
 
+
 def schedule(request):
     return render(request, 'rasp/schedule.html')
+
+
+def tardiness(request):
+    dates = []
+    for day in DayResults.objects.all():
+        dates.append(str(day.date))
+
+    users = []
+    for user in Users.objects.all():
+        users.append(user)
+
+    user_is_finded = False
+
+    if request.method == "POST":
+        username = request.POST.get('user')
+        date = datetime.datetime.strptime(request.POST.get('date'), "%Y-%m-%d").date()
+        if UserDayResults.objects.filter(user__username=username, day__date=date).exists():
+            skill = UserDayResults.objects.filter(user__username=username, day__date=date).values_list('skill', flat=True)
+            rating = Rating.objects.get(user__username=username, skill = skill[0])
+            rating.value -= 0.5
+            rating.save()
+            user_is_finded = True
+            user = Users.objects.get(username=username)
+            user.tardiness = +1
+            user.save()
+            return render(request, 'rasp/tardiness.html', {'user_is_finded': user_is_finded})
+        else:
+            return render(request, 'rasp/tardiness.html', {'user_is_finded': user_is_finded, 'dates': dates, 'users': users})
+
+    return render(request, 'rasp/tardiness.html', {'dates': dates, 'users': users})
+
 
 def dynamic_rating(request):
 
@@ -244,6 +276,7 @@ def pay(request):
 
     return render(request, 'rasp/pay.html', {'dates': dates, 'users': users})
 
+
 def payroll_preparation(request):
     if request.method == "POST":
         username = request.POST.get('user')
@@ -252,7 +285,7 @@ def payroll_preparation(request):
         user = Users.objects.get(username=username)
         day_results = []
         for num in range(DayResults.objects.get(date=date_final).id - DayResults.objects.get(date=date_start).id + 1):
-            if DayResults.objects.filter(date=date_start + datetime.timedelta(days=num),userdayresults__user__username=username):
+            if DayResults.objects.filter(date=date_start + datetime.timedelta(days=num),userdayresults__user__username=username, userdayresults__pay = True):
                 day_results.append(DayResults.objects.get(date=date_start + datetime.timedelta(days=num)))
         payroll = (user.salary/((7-len(user.daysoff))*4))*len(day_results)
         for day_result in day_results:
@@ -260,7 +293,9 @@ def payroll_preparation(request):
         payroll = round(payroll, 2)
         payroll_with_coefficient = round(payroll + 1.15, 3)
         real_payroll = round(payroll_with_coefficient/100 * 77, 3)
-        return render(request, 'rasp/payroll_preparation.html', {'payroll': payroll, 'payroll_with_coefficient': payroll_with_coefficient, 'real_payroll': real_payroll})
+        days_worked = len(day_results)
+        return render(request, 'rasp/payroll_preparation.html', {'payroll': payroll, 'payroll_with_coefficient': payroll_with_coefficient, 'real_payroll': real_payroll, 'days_worked': days_worked})
+
 
 
 

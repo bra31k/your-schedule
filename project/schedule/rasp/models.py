@@ -114,6 +114,7 @@ class UserDayResults(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     day = models.ForeignKey(DayResults, on_delete=models.CASCADE)
     change_point_rating = models.FloatField(default=0)
+    pay = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.user)

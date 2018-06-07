@@ -7,5 +7,6 @@ class Users(AbstractUser):
     precentage = models.IntegerField(default=0)
     sum_precentage = models.IntegerField(default=0)
     salary = models.IntegerField(default=0, null=True)
+    tardiness = models.IntegerField(default=0)
     def __str__(self):
         return self.username
