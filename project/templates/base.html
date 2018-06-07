@@ -1,13 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
-</head>
-<body>
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
-</body>
-</html>
+{% extends "home.html" %}
+
+{% block page_title %}Главная{% endblock %}
+{% block extrastyle %}
+<style>
+table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: auto;
+}
+th {
+    height: 20px;
+    text-align: center
+}
+td {
+    text-align: center
+}
+</style>
+{% endblock %}
+{% block logged_content %}
+    <br>
+    <h1 align="center">Актуальное расписание на текущую неделю</h1>
+    <br>
+        <table>
+                <thead>
+                <tr>
+                    <th><font size="2.5">Дни недели</font></th>
+                    <th><font size="2.5">Сотрудники</font></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for day in day_results %}
+                    <tr>
+                            <td><b><font size="2.5">{{ day.date|date:"l" }}</font></b></td>
+                            {% for user in day.userdayresults_set.all %}
+                                <td>{{ user.user.first_name }} {{ user.user.last_name}}</td>
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+            </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+    <form action="rasp/schedule/get_schedule">
+        <p align="center">Может быть вы хотите создать новое расписание?</b><br>
+            <input type="submit" value="Создать" /></p>
+    </form>
+{% endblock %}

@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'schedule.users.apps.UsersConfig',
-    'schedule.rasp.apps.RaspConfig'
+    'schedule.rasp.apps.RaspConfig',
+    'django_tables2',
 ]
 
 STATICFILES_DIRS = [
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },

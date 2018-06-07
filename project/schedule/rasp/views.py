@@ -7,10 +7,6 @@ import datetime
 # from .forms import PersonalVotesForm
 
 
-def company(request):
-    comps = Company.objects.all()
-    return render(request, 'rasp/company.html', {'comps': comps})
-
 
 def daysoff(request):
     daysoffs = Duty_setting.objects.all()
@@ -196,7 +192,7 @@ def stat(request):
 
     users = []
     for user in Users.objects.all():
-        users.append(user.username)
+        users.append(user)
 
     return render(request, 'rasp/stat.html', {'dates': dates, 'users': users})
 
@@ -244,7 +240,7 @@ def pay(request):
 
     users = []
     for user in Users.objects.all():
-        users.append(user.username)
+        users.append(user)
 
     return render(request, 'rasp/pay.html', {'dates': dates, 'users': users})
 
@@ -262,7 +258,9 @@ def payroll_preparation(request):
         for day_result in day_results:
             payroll += (day_result.income/100 * user.precentage)
         payroll = round(payroll, 2)
-        return render(request, 'rasp/payroll_preparation.html', {'payroll': payroll})
+        payroll_with_coefficient = round(payroll + 1.15, 3)
+        real_payroll = round(payroll_with_coefficient/100 * 77, 3)
+        return render(request, 'rasp/payroll_preparation.html', {'payroll': payroll, 'payroll_with_coefficient': payroll_with_coefficient, 'real_payroll': real_payroll})
 
 
 

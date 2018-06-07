@@ -8,23 +8,30 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Сохранить?" />
-  {% for day_name, day in res.items %}
-  <div>
-    <ul>
-    <p><b>{{ day_name }}</b></p>
-    {% for skill, users in day.items %}
-      <li>
-        <p><em>{{ skill }}</em></p>
-        <div>
-          {% for user in users %}
-          <input type="hidden" name="daydata-{{day_name}}" value='{{skill}}:{{user.id}}'/>
-          <p>{{ user.first_name }} {{ user.last_name }}</p>
+    <table>
+            <thead>
+            <tr>
+                <th>Дни недели</th>
+                <th>Специализация</th>
+                <th>Сотрудники</th>
+                <th>Специализация</th>
+                <th>Сотрудники</th>
+                <th></th>
+            </tr>
+        </thead>
+      <tbody>
+        {% for day_name, day in res.items %}
+        <tr>
+          <td><b>{{ day_name }}</b></td>
+          {% for skill, users in day.items %}
+            <td>{{ skill }}</td>
+              {% for user in users %}
+              <td>{{ user.first_name }} {{ user.last_name }}</td>
           {% endfor %}
-        </div>
-      </li>
     {% endfor %}
-    </ul>
-  </div>
   {% endfor %}
+        </tr>
+      </tbody>
+    </table>
   </form>
 {% endblock logged_content%}
