@@ -5,6 +5,7 @@ from . import views
 app_name = 'rasp'
 urlpatterns = [
     path('schedule/', views.schedule, name=""),
+    path('create_user', views.createUser, name="createUser"),
     path('schedule/daysoff/', views.daysoff, name='daysoff'),
     path('schedule/daysoff/vote/', views.vote, name='vote'),
     path('schedule/get_schedule/', views.DayResultView.as_view(), name='get_schedule'),

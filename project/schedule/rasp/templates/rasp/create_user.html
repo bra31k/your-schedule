@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+
+{% block page_title %}Добавить сотрудника{% endblock %}
+
+{% block logged_content %}
+{% if id %}
+    <meta http-equiv="refresh" content="0; URL='/admin/users/users/{{ id }}/change'" />
+{% else %}
+<form name="data" method="post" action="">
+    {% csrf_token %}
+        <p>Введите логин:<br>
+            <input type="text" name="username">
+        </p>
+        <p>Введите пароль:<br>
+            <input name="password" type="password">
+        </p>
+        <p>Email:<br>
+            <input name="email" type="email">
+        </p>
+    <input type="submit" value="Добавить"/>
+</form>
+{% endif %}
+{% endblock %}

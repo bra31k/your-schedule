@@ -43,6 +43,7 @@ class DayResultView(FormView):
         users_all = Users.objects.all()
         skill_all = Skill.objects.all()
         rating = Rating.objects.all()
+        dayz = []
         for day in days_all:
             on_duty[day] = {}
             skill_limit[day] = {}
@@ -128,6 +129,9 @@ class DayResultView(FormView):
                     change_skill(next_day, cur_day, skill_name, skill_limit)
 
 
+
+
+
         for day in days_all:
             for skill_per_day in day.skills_per_day.all():
                 skill_name = skill_per_day.skill.nameSkill
@@ -158,6 +162,17 @@ class DayResultView(FormView):
                 user_day_results.save()
 
         return super().post(request, *args, **kwargs)
+
+
+def createUser(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        Users.objects.create_user(username=username, email=email, password=password)
+        return render(request, 'rasp/create_user.html', {'id': Users.objects.get(username=username).id})
+
+    return render(request, 'rasp/create_user.html')
 
 
 def getRating(request):
@@ -228,6 +243,9 @@ def tardiness(request):
         date = datetime.datetime.strptime(request.POST.get('date'), "%Y-%m-%d").date()
         if UserDayResults.objects.filter(user__username=username, day__date=date).exists():
             skill = UserDayResults.objects.filter(user__username=username, day__date=date).values_list('skill', flat=True)
+            change_rating = UserDayResults.objects.get(user__username=username, day__date=date)
+            change_rating.change_point_rating -= 0.5
+            change_rating.save()
             rating = Rating.objects.get(user__username=username, skill = skill[0])
             rating.value -= 0.5
             rating.save()
