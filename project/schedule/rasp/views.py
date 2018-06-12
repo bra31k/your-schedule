@@ -12,6 +12,29 @@ def daysoff(request):
     return render(request, 'rasp/daysoff.html', {'daysoffs': daysoffs})
 
 
+def manualDaysoff(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get('user')
+        listObject = request.POST.getlist('daysoff[]')
+        user = Users.objects.get(username=username)
+        weekends = WeekendSetting.objects.all()
+        list_days_off = ''
+        if len(listObject) == weekends.values_list('weekendsPerWeek', flat=True).get():
+            for days in listObject:
+                list_days_off += days
+            user.daysoff = list_days_off
+            user.save()
+
+            return render(request, 'rasp/manual_daysoff.html')
+
+    users = Users.objects.filter(daysoff__isnull=True)
+    daysoffs = Duty_setting.objects.all()
+
+    return render(request, 'rasp/manual_daysoff.html', {'users': users, 'daysoffs': daysoffs})
+
+
 def vote(request):
     if request.method == "POST":
         listObject = request.POST.getlist('daysoff[]')

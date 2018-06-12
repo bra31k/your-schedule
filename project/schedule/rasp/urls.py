@@ -7,6 +7,7 @@ urlpatterns = [
     path('schedule/', views.schedule, name=""),
     path('create_user', views.createUser, name="createUser"),
     path('schedule/daysoff/', views.daysoff, name='daysoff'),
+    path('schedule/manual_daysoff', views.manualDaysoff, name='manual_daysoff'),
     path('schedule/daysoff/vote/', views.vote, name='vote'),
     path('schedule/get_schedule/', views.DayResultView.as_view(), name='get_schedule'),
     path('schedule/actual_schedule/', views.actual_schedule, name='actual_schedule'),
