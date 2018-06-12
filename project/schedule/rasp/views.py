@@ -68,7 +68,6 @@ class DayResultView(FormView):
         users_all = Users.objects.all()
         skill_all = Skill.objects.all()
         rating = Rating.objects.all()
-        dayz = []
         for day in days_all:
             on_duty[day] = {}
             skill_limit[day] = {}

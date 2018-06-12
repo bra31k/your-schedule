@@ -1,10 +1,11 @@
 {% extends "home.html" %}
 {% load static %}
 {% block extrahead %}
-<script src="{% static 'highcharts/highcharts.js' %}"></script>
-<script src="{% static 'highcharts/modules/series-label.js'%}"></script>
-<script src="{% static 'highcharts/modules/exporting.js'%}"></script>
-<script src="{% static 'highcharts/modules/export-data.js'%}"></script>
+    {{ block.super }}
+    <script src="{% static 'highcharts/highcharts.js' %}"></script>
+    <script src="{% static 'highcharts/modules/series-label.js'%}"></script>
+    <script src="{% static 'highcharts/modules/exporting.js'%}"></script>
+    <script src="{% static 'highcharts/modules/export-data.js'%}"></script>
 {% endblock %}
 
 {% block extrastyle %}
@@ -18,7 +19,7 @@
 </style>
 {% endblock %}
 {% load utils %}
-{% block page_title %}Income{% endblock %}
+{% block page_title %}График динамики выручки{% endblock %}
 
 {% block logged_content %}
 <div id="container-income"></div>
@@ -26,7 +27,7 @@
     (function(){Highcharts.chart('container-income', {
 
     title: {
-        text: 'Средняя выручка в день'
+        text: 'Выручка'
     },
 
     subtitle: {

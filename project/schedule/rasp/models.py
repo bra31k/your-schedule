@@ -5,7 +5,7 @@ from schedule.users.models import Users
 
 
 class Skill(models.Model):
-    nameSkill = models.CharField(max_length=30)
+    nameSkill = models.CharField(max_length=30, verbose_name = 'Специализация')
 
     class Meta:
         verbose_name = 'Специализация'
@@ -16,9 +16,9 @@ class Skill(models.Model):
 
 
 class Skills_limits(models.Model):
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    sum_employee = models.IntegerField()
-    name_skill = models.CharField(max_length=30, default=str(skill))
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE, verbose_name='Специализация')
+    sum_employee = models.IntegerField(verbose_name='Количество сотрудников')
+    name_skill = models.CharField(max_length=30, default=str(skill), verbose_name='Название')
 
     class Meta:
         verbose_name = 'Специализации'
@@ -29,11 +29,11 @@ class Skills_limits(models.Model):
 
 
 class Duty_setting(models.Model):
-    day_num = models.IntegerField(default=1)
-    day_name = models.CharField(max_length=30)
-    skills_per_day = models.ManyToManyField(Skills_limits)
-    avg_income = models.IntegerField(default=1)
-    worked_hours_in_day = models.IntegerField(default=8)
+    day_num = models.IntegerField(default=1, editable=False)
+    day_name = models.CharField(max_length=30, verbose_name='День недели')
+    skills_per_day = models.ManyToManyField(Skills_limits, verbose_name='Специализация сотрудников на смену')
+    avg_income = models.IntegerField(default=1, editable=False)
+    worked_hours_in_day = models.IntegerField(default=8, verbose_name='Количество рабочих часов')
     class Meta:
         verbose_name = 'День недели'
         verbose_name_plural = 'Дни недели'
@@ -52,20 +52,23 @@ class WeekendSetting(models.Model):
         return self.weekendsPerWeek
 
 
-
 class Rating(models.Model):
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    value = models.FloatField(default=0)
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE, verbose_name = 'Специализация')
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name = 'Сотрудник')
+    value = models.FloatField(default=0, editable=False)
+
+    class Meta:
+        verbose_name = 'Специализации сотрудников'
+        verbose_name_plural = 'Специализации сотрудников'
 
     def __str__(self):
         return str(self.user)
 
 
 class DayResults(models.Model):
-    date = models.DateField()
-    income = models.IntegerField()
-    day_num = models.IntegerField()
+    date = models.DateField(verbose_name='Дата', editable=False)
+    income = models.IntegerField(verbose_name='Выручка')
+    day_num = models.IntegerField(verbose_name='День недели', editable=False)
 
     class Meta:
         verbose_name = 'Результат дня'
