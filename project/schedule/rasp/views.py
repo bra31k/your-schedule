@@ -6,7 +6,9 @@ import datetime
 
 
 def daysoff(request):
+
     daysoffs = Duty_setting.objects.all()
+
     return render(request, 'rasp/daysoff.html', {'daysoffs': daysoffs})
 
 

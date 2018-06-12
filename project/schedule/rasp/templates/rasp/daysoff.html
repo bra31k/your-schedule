@@ -1,10 +1,10 @@
 <!-- templates/home.html-->
 {% extends "home.html" %}
 
-{% block page_title %}Daysoff{% endblock %}
+{% block page_title %}Выбор выходных дней{% endblock %}
 
 {% block logged_content %}
-  {% if user.daysoff != 0 %}
+  {% if user.daysoff %}
   <p>Вы уже выбрали выходые дни на неделю</p>
   {% else %}
   <form action="vote/" method="post">

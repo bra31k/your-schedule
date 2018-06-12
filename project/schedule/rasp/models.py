@@ -7,6 +7,10 @@ from schedule.users.models import Users
 class Skill(models.Model):
     nameSkill = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name = 'Специализация'
+        verbose_name_plural = 'Специализации'
+
     def __str__(self):
         return self.nameSkill
 
@@ -15,6 +19,10 @@ class Skills_limits(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     sum_employee = models.IntegerField()
     name_skill = models.CharField(max_length=30, default=str(skill))
+
+    class Meta:
+        verbose_name = 'Специализации'
+        verbose_name_plural = 'Количественная настройка сотрудников'
 
     def __str__(self):
         return self.name_skill
@@ -26,13 +34,19 @@ class Duty_setting(models.Model):
     skills_per_day = models.ManyToManyField(Skills_limits)
     avg_income = models.IntegerField(default=1)
     worked_hours_in_day = models.IntegerField(default=8)
-
+    class Meta:
+        verbose_name = 'День недели'
+        verbose_name_plural = 'Дни недели'
     def __str__(self):
         return self.day_name
 
 
 class WeekendSetting(models.Model):
     weekendsPerWeek = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Настройка количества выходных'
+        verbose_name_plural = 'Настройки количества выходных'
 
     def __int__(self):
         return self.weekendsPerWeek
@@ -52,6 +66,10 @@ class DayResults(models.Model):
     date = models.DateField()
     income = models.IntegerField()
     day_num = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Результат дня'
+        verbose_name_plural = 'Результаты дней'
 
     def __str__(self):
         return str(self.date)
