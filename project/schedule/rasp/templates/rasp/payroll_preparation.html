@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+
+{% block page_title %}Расчет заработной платы{% endblock %}
+
+{% block logged_content %}
+<br>
+    <h1 align="center">Расчет заработной платы сотрудника {{ user.first_name }} {{ user.last_name}}</h1>
+    <br>
+<body>
+<i><p>
+    Заработная плата до вычета НДФЛ: </i> <b>{{ payroll }}</b> руб.</p><br>
+    <i><p>Заработная плата до вычета НДФЛ с учетом районного коэффицента(1.15)</i> <b>{{ payroll_with_coefficient }}</b> руб.</p><br>
+    <i><p>Заработная плата на руки: </i> <b> {{ real_payroll }} </b> руб.</p><br>
+    <i><p>Количество отработанных смен за данный период: </i> <b> {{ days_worked }} </b> смен</p><br>
+</body>
+{% endblock %}

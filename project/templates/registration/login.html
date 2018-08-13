@@ -1,0 +1,13 @@
+{% extends "admin/login.html" %}
+
+{% block title %}Login{% endblock %}
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Авторизация') }}</a></h1>
+{% endblock %}
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Login</button>
+</form>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!-- templates/home.html-->
+{% extends "home.html" %}
+
+{% block page_title %}Расписание на текущую неделю{% endblock %}
+{% block extrastyle %}
+<style>
+table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: auto;
+}
+th {
+    height: 20px;
+    text-align: center
+}
+td {
+    text-align: center
+}
+</style>
+{% endblock %}
+{% block logged_content %}
+    <table>
+            <thead>
+            <tr>
+                <th><font size="2.5">Дни недели</font></th>
+                <th><font size="2.5">Сотрудники</font></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for day in day_results %}
+                <tr>
+                        <td><b><font size="2.5">{{ day.date|date:"l" }}</font></b></td>
+                        {% for user in day.userdayresults_set.all %}
+                            <td>{{ user.user.first_name }} {{ user.user.last_name}}</td>
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+        </tbody>
+</table>
+{% endblock %}

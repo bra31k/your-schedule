@@ -1,0 +1,48 @@
+{% extends "home.html" %}
+{% load i18n admin_urls static admin_list %}
+{% block page_title %}Статистика{% endblock %}
+
+
+{% block logged_content %}
+{% if user.group == admin %}
+<p><b>Построить график динамики выручки за неделю:</b><br>
+<form name="date" method="post" action="income">
+    {% csrf_token %}
+        <p>Введите начальную дату:<br>
+        <select name="date_start">
+            {% for date in dates %}
+                <option name="date_start" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+        </select>
+        <p>Введите конечную дату:</b><br>
+            <select name="date_final">
+            {% for date in dates %}
+                <option name="date_final" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+        </select>
+        </p>
+    <input type="submit" value="Построить" />
+</form>
+    <br>
+    <form name="date" action="rating">
+        <p>Таблица рейтинга сотрудников:<br>
+        <input type="submit" value="Показать" />
+            </form>
+<form name="user" action="dynamic_rating" method="POST">
+    <p>График роста рейтинга сотрудников:</b><br>
+        {% csrf_token %}
+        <select name="user">
+            {% for user in users %}
+                <option name="user" value="{{ user }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+            <input type="submit" value="Показать" />
+        </select>
+    </p>
+</form>
+{% else %}
+<form name="date" action="rating">
+        <p><b>Показать таблицу рейтинга сотрудников?</b><br>
+        <input type="submit" value="Показать" />
+            </form>
+{% endif %}
+{% endblock %}

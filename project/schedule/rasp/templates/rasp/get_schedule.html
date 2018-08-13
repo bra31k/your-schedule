@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+{% load utils %}
+
+{% block page_title %}Составить расписание{% endblock %}
+
+{% block logged_content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Сохранить?" />
+    <table>
+            <thead>
+            <tr>
+                <th>Дни недели</th>
+                <th>Специализация</th>
+                <th>Сотрудники</th>
+                <th>Специализация</th>
+                <th>Сотрудники</th>
+                <th></th>
+            </tr>
+        </thead>
+      <tbody>
+        {% for day_name, day in res.items %}
+        <tr>
+          <td><b>{{ day_name }}</b></td>
+          {% for skill, users in day.items %}
+            <td>{{ skill }}</td>
+              {% for user in users %}
+              <td>{{ user.first_name }} {{ user.last_name }}</td>
+          {% endfor %}
+    {% endfor %}
+  {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </form>
+{% endblock logged_content%}

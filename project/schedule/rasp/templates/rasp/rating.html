@@ -1,0 +1,39 @@
+{% extends "home.html" %}
+{% load i18n admin_urls static admin_list %}
+{% block page_title %}Таблица рейтинга{% endblock %}
+{% block extrastyle %}
+<style>
+table {
+    border-collapse: collapse;
+    width: 50%;
+    margin: auto;
+}
+th {
+    height: 20px;
+    text-align: center
+}
+td {
+    text-align: center
+}
+</style>
+{% endblock %}
+{% block logged_content %}
+    <table>
+        <thead>
+            <tr>
+            <th>Сотрудник</th>
+            <th>Скилл</th>
+            <th>Рейтинг</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in ratings %}
+                <tr>
+                    <td><b> {{ rating.user.first_name }} {{rating.user.last_name}} </b></td>
+                    <td> {{ rating.skill }} </td>
+                    <td> {{ rating.value }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

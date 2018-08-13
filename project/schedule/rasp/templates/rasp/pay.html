@@ -1,0 +1,34 @@
+{% extends "home.html" %}
+{% load i18n admin_urls static admin_list %}
+{% block page_title %}Расчет заработной платы{% endblock %}
+
+
+{% block logged_content %}
+{% if user.group == admin %}
+<p><b>Подсчет заработной платы сотрудника за определенный период:</b><br>
+<form name="user" action="payroll_preparation" method="POST">
+    <p>Введите начальную дату:<br>
+        <select name="date_start">
+            {% for date in dates %}
+                <option name="date_start" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+        </select>
+        <p>Введите конечную дату:</b><br>
+            <select name="date_final">
+            {% for date in dates %}
+                <option name="date_final" value="{{date}}">{{ date }}</option>
+            {% endfor %}
+            </select>
+         </p>
+    <p>Выберите сотрудника:</b><br>
+        {% csrf_token %}
+        <select name="user">
+            {% for user in users %}
+                <option name="user" value="{{ user }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+            <input type="submit" value="рассчитать" />
+        </select>
+    </p>
+</form>
+{% endif %}
+{% endblock %}
